@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -204,7 +205,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View renders the current slide in the presentation and the status bar which
 // contains the author, date, and pagination information.
 func (m Model) View() string {
-	r, _ := glamour.NewTermRenderer(m.Theme, glamour.WithWordWrap(m.viewport.Width))
+	r, _ := glamour.NewTermRenderer(m.Theme,
+		glamour.WithWordWrap(m.viewport.Width),
+		glamour.WithBaseURL(filepath.Dir(m.FileName)),
+	)
 	slide := m.Slides[m.Page]
 	slide = code.HideComments(slide)
 	slide, err := r.Render(slide)
@@ -226,7 +230,7 @@ func (m Model) View() string {
 
 	right := styles.Page.Render(m.paging())
 	status := styles.Status.Render(styles.JoinHorizontal(left, right, m.viewport.Width))
-	return styles.JoinVertical(slide, status, m.viewport.Height)
+	return styles.JoinVertical(slide, status, m.viewport.Height, 20)
 }
 
 func (m *Model) paging() string {

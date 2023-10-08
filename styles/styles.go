@@ -50,8 +50,8 @@ func JoinHorizontal(left, right string, width int) string {
 }
 
 // JoinVertical joins two strings vertically and fills the space in-between.
-func JoinVertical(top, bottom string, height int) string {
-	h := height - lipgloss.Height(bottom)
+func JoinVertical(top, bottom string, height int, offset int) string {
+	h := height - lipgloss.Height(bottom) - offset
 	return lipgloss.PlaceVertical(h, lipgloss.Top, top) + bottom
 }
 
